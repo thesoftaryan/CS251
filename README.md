@@ -9,6 +9,7 @@ we have provided you with :
 1. The lex file (php.l)
 2. compiled lex file (lex.yy.c)
 3. php (compiled file for lex.yy.c)
+4. references.txt (References for this assignment)
 
 When you run './php', it will wait for your input to print the recognized
 token.
