@@ -1,22 +1,29 @@
 %{
 #include <stdio.h>
-// regular expressions to describe the tokens
+// regular expressions to describe the tokens for PHP language
 %}
 
 
 
 %%
 
+"//".*"\n"	{printf("SLCOMMENT\n");} // SINGLE LINE COMMENTS : Giving comments the highest priority
+"/*".*"*/"	{printf("MLCOMMENT\n");} // MULTI LINE COMMENTS : Giving comments the highest priority
 "<?php"       { printf("START\n"); } // The start and end block must have the highest priority
 "?>"       { printf("END\n"); }
 ";"       { printf("SEMI\n"); }
-"//"       { printf("SLC\n"); }
-"/*"[.]"*/"      { printf("MLC\n"); }
 
 "include"      { printf("INCLUDE\n"); }
 "require"      { printf("REQUIRE\n"); }
+"("	{printf("LPARENTHESIS\n");}
+")"	{printf("RPARENTHESIS\n");}
+"{"	{printf("LCURLY\n");}
+"}"	{printf("RCURLY\n");}
+"["	{printf("LSQUARE\n");}
+"]"	{printf("RSQUARE\n");}
 
- /* Keywords:Start */
+ /* Keywords,Statements,ControlFlow:Start */
+
 "echo"      { printf("ECHO\n"); } // Identifying echo keyword
 "if"        { printf("IF\n"); } // Since, PHp is case-insensitive for keywords so we have taken all possible case for IF
 "else"       { printf("ELSE\n"); }
@@ -28,8 +35,11 @@
 "case"      { printf("CASE\n"); }
 "continue"      { printf("CONTINUE\n"); }
 "break"      { printf("BREAK\n"); }
-"function"   { printf("FUNCTION\n"); }
+"function"   { printf("FUNCTION\n"); } // checking for function creation
+
  /* Keywords:End */
+
+[a-zA-Z]+[a-zA-Z0-9_]*"()"	{printf("FUNCTION_CALL\n");} // identifying when a function is called
 
 
 
@@ -65,10 +75,11 @@
 
 
 
- /* Identifiers */
-"$"_?[a-zA-Z_]+[a-zA-Z0-9_]*    { printf("IDENTI\n"); } // regex for identifiers in php
+ /* Identifiers : START */
 
- /* Identifiers */
+"$"[a-zA-Z_]+[a-zA-Z0-9_]*    { printf("IDENTIFIER\n"); } // regex for identifiers in php
+
+ /* Identifiers : END */
 
 [ \t\n]*      // Ignoring whitespaces and newline characters
 
