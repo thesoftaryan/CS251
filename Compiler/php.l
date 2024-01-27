@@ -47,7 +47,7 @@
 
 [0-9]+       { printf("CINT\n"); }
 [0-9]+\.[0-9]+      { printf("CFLOAT\n"); }
-\"[a-zA-Z0-9]+\"     { printf("CSTRING\n"); }
+\"[a-zA-Z0-9 ]+\"     { printf("CSTRING\n"); }
 \'[a-zA-Z0-9]?\'     { printf("CCHAR\n"); }
 "true"|"false"      { printf("CBOOL\n"); }
 
