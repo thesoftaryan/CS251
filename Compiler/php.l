@@ -12,7 +12,6 @@
 "/*".*"*/"	{printf("MLCOMMENT\n");return MLCOMMENT;} // MULTI LINE COMMENTS : Giving comments the highest priority
 "<?php"       { printf("START\n"); return START;} // The start and end block must have the highest priority
 "?>"       { printf("END\n"); return END;}
- //";"       { printf("SEMI\n"); return SEMI;}
 
 "include"      { printf("INCLUDE\n"); return INCLUDE;}
 "require"      { printf("REQUIRE\n"); return REQUIRE;}
