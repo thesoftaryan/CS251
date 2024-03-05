@@ -13,14 +13,9 @@
 "<?php"       { printf("START\n"); return START;} // The start and end block must have the highest priority
 "?>"       { printf("END\n"); return END;}
 
+
 "include"      { printf("INCLUDE\n"); return INCLUDE;}
 "require"      { printf("REQUIRE\n"); return REQUIRE;}
-"("	{printf("LPARENTHESIS\n"); return LPARENTHESIS;}
-")"	{printf("RPARENTHESIS\n"); return RPARENTHESIS;}
-"{"	{printf("LCURLY\n"); return LCURLY;}
-"}"	{printf("RCURLY\n"); return RCURLY;}
-"["	{printf("LSQUARE\n"); return LSQUARE;}
-"]"	{printf("RSQUARE\n"); return RSQUARE;}
 
  /* Keywords,Statements,ControlFlow:Start */
 
@@ -54,22 +49,11 @@
  /* Constants */
 
  /* operators */
-"*"       { printf("MUL\n"); return MUL;}
-"/"       { printf("DIV\n"); return DIV;}
-"%"       { printf("MOD\n"); return MOD;}
-"+"       { printf("ADD\n"); return ADD;}
-"-"       { printf("SUB\n"); return SUB;}
-"."       { printf("DOT\n"); return DOT;}
-"<"       { printf("LT\n"); return LT;}
-">"       { printf("GT\n"); return GT;}
 "**"       { printf("EXPO\n"); return EXPO;}
 "<="       { printf("LE\n");return LE;}
 ">="       { printf("GE\n");return GE;}
 "=="       { printf("EEQ\n");return EEQ;}
 "!="       { printf("NEQ\n");return NEQ;}
-"="       { printf("ASSIGN\n");return ASSIGN;}
-"||"       { printf("LOR\n");return LOR;}
-"&&"       { printf("LAND\n");return LAND;}
 
  /* operators */
 
@@ -85,9 +69,7 @@
 
 %%
 
-int yywrap(void){}
-
-int main(){
-
- yylex();
+int yywrap(void){
+	return 1;
 }
+
