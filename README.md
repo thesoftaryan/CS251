@@ -1,6 +1,6 @@
 # CS251
 
-# authors : Aryan(12240280) and Darsh(12240500)
+# Authors : Aryan(12240280) and Darsh(12240500)
 
 This folder contains the php compiler.
 We have used lex (for tokenization) and yacc (for syntax analyzer) for creating this compiler for PHP.
