@@ -75,8 +75,8 @@ incrdecrstm: UINCR {printf("incr\n");}
 	;
 	
  /* Start of the break and continue keyword in a loop */
-loopcontibreak: BREAK SEMI statements {}
-	| CONTINUE SEMI statements {}
+loopcontibreak: BREAK SEMI statements loopcontibreak {}
+	| CONTINUE SEMI statements loopcontibreak {}
 	|
 	;
 	
@@ -157,8 +157,9 @@ boolexpr: const LT const {$$ = $1 < $3;}
 
 void yyerror(char *error){
 
-	fprintf(stderr, "\n!!!!!!!!!!!!! error: %s !!!!!!!!!!!!!\n", error);
+	fprintf(stderr, "!!!!!!!!!!!!! error: %s !!!!!!!!!!!!!\n", error);
 	flag=1;
+
 }
 
 

@@ -1,8 +1,11 @@
 <?php
 
-do {
-  echo "The number is: $x <br>";
-  
-} while ($x <= 5);
+
+while(4<5){
+	break;
+	$something=8739;
+	continue;
+	$comething=384;
+}
 
 ?>
