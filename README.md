@@ -5,6 +5,8 @@
 
 ## Points to be noted before running the compiler
 
+ **__ This compiler is case `sensitive`, all keywords must be written in lowercase __**
+
 1. **Unary increment and decrement** can be done in updation part of for loop only.
 
 2. **Break and continue** statements can not be written inside any other statements like conditionals. They have to be written in the same level as other statement in a loop.
