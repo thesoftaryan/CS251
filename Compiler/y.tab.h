@@ -54,25 +54,25 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    SLCOMMENT = 258,               /* SLCOMMENT  */
-    MLCOMMENT = 259,               /* MLCOMMENT  */
+    EQ = 258,                      /* EQ  */
+    NE = 259,                      /* NE  */
     START = 260,                   /* START  */
     END = 261,                     /* END  */
-    INCLUDE = 262,                 /* INCLUDE  */
-    REQUIRE = 263,                 /* REQUIRE  */
-    ECHO = 264,                    /* ECHO  */
-    IF = 265,                      /* IF  */
-    ELSE = 266,                    /* ELSE  */
-    ELSEIF = 267,                  /* ELSEIF  */
-    FOR = 268,                     /* FOR  */
-    WHILE = 269,                   /* WHILE  */
-    DO = 270,                      /* DO  */
-    SWITCH = 271,                  /* SWITCH  */
-    CASE = 272,                    /* CASE  */
-    CONTINUE = 273,                /* CONTINUE  */
-    BREAK = 274,                   /* BREAK  */
+    ECHO = 262,                    /* ECHO  */
+    IF = 263,                      /* IF  */
+    ELSE = 264,                    /* ELSE  */
+    ELSEIF = 265,                  /* ELSEIF  */
+    FOR = 266,                     /* FOR  */
+    WHILE = 267,                   /* WHILE  */
+    DO = 268,                      /* DO  */
+    SWITCH = 269,                  /* SWITCH  */
+    CASE = 270,                    /* CASE  */
+    DEFAULT = 271,                 /* DEFAULT  */
+    CONTINUE = 272,                /* CONTINUE  */
+    BREAK = 273,                   /* BREAK  */
+    RETURN = 274,                  /* RETURN  */
     FUNCTION = 275,                /* FUNCTION  */
-    FCALL = 276,                   /* FCALL  */
+    FNAME = 276,                   /* FNAME  */
     CINT = 277,                    /* CINT  */
     CFLOAT = 278,                  /* CFLOAT  */
     CSTRING = 279,                 /* CSTRING  */
@@ -83,7 +83,27 @@ extern int yydebug;
     GE = 284,                      /* GE  */
     EEQ = 285,                     /* EEQ  */
     NEQ = 286,                     /* NEQ  */
-    IDENTIFIER = 287               /* IDENTIFIER  */
+    IDENTIFIER = 287,              /* IDENTIFIER  */
+    ASSG = 288,                    /* ASSG  */
+    COMMA = 289,                   /* COMMA  */
+    SEMI = 290,                    /* SEMI  */
+    COLON = 291,                   /* COLON  */
+    MUL = 292,                     /* MUL  */
+    DIV = 293,                     /* DIV  */
+    MOD = 294,                     /* MOD  */
+    ADD = 295,                     /* ADD  */
+    SUB = 296,                     /* SUB  */
+    DOT = 297,                     /* DOT  */
+    LT = 298,                      /* LT  */
+    GT = 299,                      /* GT  */
+    LPARENTHESIS = 300,            /* LPARENTHESIS  */
+    RPARENTHESIS = 301,            /* RPARENTHESIS  */
+    LCURLY = 302,                  /* LCURLY  */
+    RCURLY = 303,                  /* RCURLY  */
+    LSQUARE = 304,                 /* LSQUARE  */
+    RSQUARE = 305,                 /* RSQUARE  */
+    UINCR = 306,                   /* UINCR  */
+    UDECR = 307                    /* UDECR  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -92,25 +112,25 @@ extern int yydebug;
 #define YYEOF 0
 #define YYerror 256
 #define YYUNDEF 257
-#define SLCOMMENT 258
-#define MLCOMMENT 259
+#define EQ 258
+#define NE 259
 #define START 260
 #define END 261
-#define INCLUDE 262
-#define REQUIRE 263
-#define ECHO 264
-#define IF 265
-#define ELSE 266
-#define ELSEIF 267
-#define FOR 268
-#define WHILE 269
-#define DO 270
-#define SWITCH 271
-#define CASE 272
-#define CONTINUE 273
-#define BREAK 274
+#define ECHO 262
+#define IF 263
+#define ELSE 264
+#define ELSEIF 265
+#define FOR 266
+#define WHILE 267
+#define DO 268
+#define SWITCH 269
+#define CASE 270
+#define DEFAULT 271
+#define CONTINUE 272
+#define BREAK 273
+#define RETURN 274
 #define FUNCTION 275
-#define FCALL 276
+#define FNAME 276
 #define CINT 277
 #define CFLOAT 278
 #define CSTRING 279
@@ -122,6 +142,26 @@ extern int yydebug;
 #define EEQ 285
 #define NEQ 286
 #define IDENTIFIER 287
+#define ASSG 288
+#define COMMA 289
+#define SEMI 290
+#define COLON 291
+#define MUL 292
+#define DIV 293
+#define MOD 294
+#define ADD 295
+#define SUB 296
+#define DOT 297
+#define LT 298
+#define GT 299
+#define LPARENTHESIS 300
+#define RPARENTHESIS 301
+#define LCURLY 302
+#define RCURLY 303
+#define LSQUARE 304
+#define RSQUARE 305
+#define UINCR 306
+#define UDECR 307
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
