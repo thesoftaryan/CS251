@@ -35,8 +35,7 @@ statement: declarestm {printf("Reached at declaration statement\n");}
 	| loopstm {printf("Reached at loop statement\n");}
 	| boolexpr {printf("Reached at boolean statement\n");}
 	| condistm {printf("Reached at conditional statement\n");}
-	| funcdef {}
-	| funcinvoc SEMI {}
+	| funcstm {}
 	| echostm {}
 	;
 
@@ -49,7 +48,8 @@ declarestm: IDENTIFIER ASSG value SEMI {printf("Inside declare stmt\n\n");};
 
  /* Start of the Declaration value statement */
 value: const {printf("Reached const\n");}
-	| value op const {printf("Reached value op const\n");};
+	| value op const {printf("Reached value op const\n");}
+	| LPARENTHESIS value RPARENTHESIS;
 	
  /* Start of the const used in value */
 const: CINT {printf("Reached CINT\n");}
@@ -63,9 +63,10 @@ const: CINT {printf("Reached CINT\n");}
 
 
  /* Start of the loop statements */
-loopstm: WHILE LPARENTHESIS boolexpr RPARENTHESIS LCURLY statements loopcontibreak RCURLY {printf("yacc: While");}
-	| FOR LPARENTHESIS declarestm boolexpr SEMI incrdecrstm IDENTIFIER incrdecrstm RPARENTHESIS LCURLY statements loopcontibreak RCURLY {printf("yacc: For");}
-	| DO LCURLY statements loopcontibreak RCURLY WHILE LPARENTHESIS boolexpr RPARENTHESIS SEMI {printf("yacc: DO WHILE");}
+loopstm: WHILE LPARENTHESIS boolexpr RPARENTHESIS LCURLY statements RCURLY {printf("yacc: While");}
+	| FOR LPARENTHESIS declarestm boolexpr SEMI incrdecrstm IDENTIFIER incrdecrstm RPARENTHESIS LCURLY statements RCURLY {printf("yacc: For");}
+	| DO LCURLY statements RCURLY WHILE LPARENTHESIS boolexpr RPARENTHESIS SEMI {printf("yacc: DO WHILE");}
+	| loopcontibreak {}
 	;
 
  /* Start of the unary increment (++) and decrement (--) operators */
@@ -75,9 +76,8 @@ incrdecrstm: UINCR {printf("incr\n");}
 	;
 	
  /* Start of the break and continue keyword in a loop */
-loopcontibreak: BREAK SEMI statements loopcontibreak {}
-	| CONTINUE SEMI statements loopcontibreak {}
-	|
+loopcontibreak: BREAK SEMI {}
+	| CONTINUE SEMI {}
 	;
 	
  /* Start of the Conditional Statements */
@@ -107,16 +107,19 @@ switchdefault: DEFAULT COLON statements {}
 	;
 
  /* Start of the cases in switch */
-switchcase: CASE const COLON statements switchbreak switchcase {printf("Reached conti\n");}
+switchcase: CASE const COLON statements switchcase {printf("Reached conti\n");}
 	|
 	;
- /* break statements in the switch */
-switchbreak: BREAK SEMI {printf("Semi\n");}
-	|
-	;
+ 
 
- /* Defining grammar for function definition*/
-funcdef: FUNCTION FNAME LPARENTHESIS oneparam funcparams RPARENTHESIS LCURLY statements funcret RCURLY {};
+ /* function statements */
+funcstm: funcdef {}
+	| funcinvoc SEMI {}
+	| RETURN value SEMI {};
+
+
+ /* Start: Defining grammar for function definition*/
+funcdef: FUNCTION FNAME LPARENTHESIS oneparam funcparams RPARENTHESIS LCURLY statements RCURLY {};
 
 oneparam: IDENTIFIER {}
 	|
@@ -124,14 +127,17 @@ oneparam: IDENTIFIER {}
 funcparams: COMMA IDENTIFIER funcparams {}
 	|
 	;
-funcret: RETURN value SEMI statements{}
-	|
-	;
- /* Defining grammar for function definition*/
+ /* END : Defining grammar for function definition*/
  
  
 /* Defining grammar for function invocation: Currently function invocation supports only identifiers*/
-funcinvoc: FNAME LPARENTHESIS oneparam funcparams RPARENTHESIS {};
+funcinvoc: FNAME LPARENTHESIS oneargu constfuncargu RPARENTHESIS {};
+oneargu: const {}
+	|
+	;
+constfuncargu : COMMA const constfuncargu {}
+	|
+	;
 
 
  /* Start of the operations */

@@ -9,13 +9,7 @@
 
 1. **Unary increment and decrement** can be done in updation part of for loop only.
 
-2. **Break and continue** statements can not be written inside any other statements like conditionals. They have to be written in the same level as other statement in a loop.
-
-3. **Return statement** can only be written at last line of a function definition.
-
-4. **Function definition** can not handle default parameters, currently it is only able to define Identifiers as parameters.
-
-5. **Function invocation** can not contain any const values, we can pass only identifiers as values.
+2. **Function definition** can not handle default parameters, currently it is only able to define Identifiers as parameters.
 
 
 
