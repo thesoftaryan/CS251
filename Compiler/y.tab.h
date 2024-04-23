@@ -54,56 +54,54 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    EQ = 258,                      /* EQ  */
-    NE = 259,                      /* NE  */
-    START = 260,                   /* START  */
-    END = 261,                     /* END  */
-    ECHO = 262,                    /* ECHO  */
-    IF = 263,                      /* IF  */
-    ELSE = 264,                    /* ELSE  */
-    ELSEIF = 265,                  /* ELSEIF  */
-    FOR = 266,                     /* FOR  */
-    WHILE = 267,                   /* WHILE  */
-    DO = 268,                      /* DO  */
-    SWITCH = 269,                  /* SWITCH  */
-    CASE = 270,                    /* CASE  */
-    DEFAULT = 271,                 /* DEFAULT  */
-    CONTINUE = 272,                /* CONTINUE  */
-    BREAK = 273,                   /* BREAK  */
-    RETURN = 274,                  /* RETURN  */
-    FUNCTION = 275,                /* FUNCTION  */
-    FNAME = 276,                   /* FNAME  */
-    CINT = 277,                    /* CINT  */
-    CFLOAT = 278,                  /* CFLOAT  */
-    CSTRING = 279,                 /* CSTRING  */
-    CCHAR = 280,                   /* CCHAR  */
-    CBOOL = 281,                   /* CBOOL  */
-    EXPO = 282,                    /* EXPO  */
-    LE = 283,                      /* LE  */
-    GE = 284,                      /* GE  */
-    EEQ = 285,                     /* EEQ  */
-    NEQ = 286,                     /* NEQ  */
-    IDENTIFIER = 287,              /* IDENTIFIER  */
-    ASSG = 288,                    /* ASSG  */
-    COMMA = 289,                   /* COMMA  */
-    SEMI = 290,                    /* SEMI  */
-    COLON = 291,                   /* COLON  */
-    MUL = 292,                     /* MUL  */
-    DIV = 293,                     /* DIV  */
-    MOD = 294,                     /* MOD  */
-    ADD = 295,                     /* ADD  */
-    SUB = 296,                     /* SUB  */
-    DOT = 297,                     /* DOT  */
-    LT = 298,                      /* LT  */
-    GT = 299,                      /* GT  */
-    LPARENTHESIS = 300,            /* LPARENTHESIS  */
-    RPARENTHESIS = 301,            /* RPARENTHESIS  */
-    LCURLY = 302,                  /* LCURLY  */
-    RCURLY = 303,                  /* RCURLY  */
-    LSQUARE = 304,                 /* LSQUARE  */
-    RSQUARE = 305,                 /* RSQUARE  */
-    UINCR = 306,                   /* UINCR  */
-    UDECR = 307                    /* UDECR  */
+    START = 258,                   /* START  */
+    END = 259,                     /* END  */
+    ECHO = 260,                    /* ECHO  */
+    IF = 261,                      /* IF  */
+    ELSE = 262,                    /* ELSE  */
+    ELSEIF = 263,                  /* ELSEIF  */
+    FOR = 264,                     /* FOR  */
+    WHILE = 265,                   /* WHILE  */
+    DO = 266,                      /* DO  */
+    SWITCH = 267,                  /* SWITCH  */
+    CASE = 268,                    /* CASE  */
+    DEFAULT = 269,                 /* DEFAULT  */
+    CONTINUE = 270,                /* CONTINUE  */
+    BREAK = 271,                   /* BREAK  */
+    RETURN = 272,                  /* RETURN  */
+    FUNCTION = 273,                /* FUNCTION  */
+    FNAME = 274,                   /* FNAME  */
+    CINT = 275,                    /* CINT  */
+    CFLOAT = 276,                  /* CFLOAT  */
+    CSTRING = 277,                 /* CSTRING  */
+    CCHAR = 278,                   /* CCHAR  */
+    CBOOL = 279,                   /* CBOOL  */
+    EXPO = 280,                    /* EXPO  */
+    LE = 281,                      /* LE  */
+    GE = 282,                      /* GE  */
+    EEQ = 283,                     /* EEQ  */
+    NEQ = 284,                     /* NEQ  */
+    IDENTIFIER = 285,              /* IDENTIFIER  */
+    ASSG = 286,                    /* ASSG  */
+    COMMA = 287,                   /* COMMA  */
+    SEMI = 288,                    /* SEMI  */
+    COLON = 289,                   /* COLON  */
+    MUL = 290,                     /* MUL  */
+    DIV = 291,                     /* DIV  */
+    MOD = 292,                     /* MOD  */
+    ADD = 293,                     /* ADD  */
+    SUB = 294,                     /* SUB  */
+    DOT = 295,                     /* DOT  */
+    LT = 296,                      /* LT  */
+    GT = 297,                      /* GT  */
+    LPARENTHESIS = 298,            /* LPARENTHESIS  */
+    RPARENTHESIS = 299,            /* RPARENTHESIS  */
+    LCURLY = 300,                  /* LCURLY  */
+    RCURLY = 301,                  /* RCURLY  */
+    LSQUARE = 302,                 /* LSQUARE  */
+    RSQUARE = 303,                 /* RSQUARE  */
+    UINCR = 304,                   /* UINCR  */
+    UDECR = 305                    /* UDECR  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -112,60 +110,75 @@ extern int yydebug;
 #define YYEOF 0
 #define YYerror 256
 #define YYUNDEF 257
-#define EQ 258
-#define NE 259
-#define START 260
-#define END 261
-#define ECHO 262
-#define IF 263
-#define ELSE 264
-#define ELSEIF 265
-#define FOR 266
-#define WHILE 267
-#define DO 268
-#define SWITCH 269
-#define CASE 270
-#define DEFAULT 271
-#define CONTINUE 272
-#define BREAK 273
-#define RETURN 274
-#define FUNCTION 275
-#define FNAME 276
-#define CINT 277
-#define CFLOAT 278
-#define CSTRING 279
-#define CCHAR 280
-#define CBOOL 281
-#define EXPO 282
-#define LE 283
-#define GE 284
-#define EEQ 285
-#define NEQ 286
-#define IDENTIFIER 287
-#define ASSG 288
-#define COMMA 289
-#define SEMI 290
-#define COLON 291
-#define MUL 292
-#define DIV 293
-#define MOD 294
-#define ADD 295
-#define SUB 296
-#define DOT 297
-#define LT 298
-#define GT 299
-#define LPARENTHESIS 300
-#define RPARENTHESIS 301
-#define LCURLY 302
-#define RCURLY 303
-#define LSQUARE 304
-#define RSQUARE 305
-#define UINCR 306
-#define UDECR 307
+#define START 258
+#define END 259
+#define ECHO 260
+#define IF 261
+#define ELSE 262
+#define ELSEIF 263
+#define FOR 264
+#define WHILE 265
+#define DO 266
+#define SWITCH 267
+#define CASE 268
+#define DEFAULT 269
+#define CONTINUE 270
+#define BREAK 271
+#define RETURN 272
+#define FUNCTION 273
+#define FNAME 274
+#define CINT 275
+#define CFLOAT 276
+#define CSTRING 277
+#define CCHAR 278
+#define CBOOL 279
+#define EXPO 280
+#define LE 281
+#define GE 282
+#define EEQ 283
+#define NEQ 284
+#define IDENTIFIER 285
+#define ASSG 286
+#define COMMA 287
+#define SEMI 288
+#define COLON 289
+#define MUL 290
+#define DIV 291
+#define MOD 292
+#define ADD 293
+#define SUB 294
+#define DOT 295
+#define LT 296
+#define GT 297
+#define LPARENTHESIS 298
+#define RPARENTHESIS 299
+#define LCURLY 300
+#define RCURLY 301
+#define LSQUARE 302
+#define RSQUARE 303
+#define UINCR 304
+#define UDECR 305
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 35 "php.y"
+ 	struct var_name { 
+			char name[100]; 
+		} nd_obj;
+		
+		struct conditional { 
+			char name[100];
+			char ifPart[5];
+			char elsePart[5];
+		} conditional_obj;		
+	
+
+#line 179 "y.tab.h"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

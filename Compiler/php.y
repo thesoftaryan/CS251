@@ -1,22 +1,64 @@
 %{
-	#include <stdio.h>
+	#include<stdio.h>
+    	#include<string.h>
+    	#include<stdlib.h>
+    	#include<ctype.h>
+    	
+    	// For now only taking limit of variables to be 50
+	struct vars {
+		char name[100];
+		char value[256];
+		int scope;
+	} symbolTable[50];
+	
+	
 	int yylex(void);
     	void yyerror(char* s);
+    	int searchSTable(char* varName, char* val);
+    	void insertSTable(char* varName, char* val);
 	int flag=0;
+	
+	int icIndex=0;
+	int tempVar=0;
+	int label=0;
+	int isIf=0;
+	int varCount=0;
+	int currentScope=0;
+	char intermediateCodes[50][100];
+
+
+	
+	
 %}
 
-%left '<' '>' LE GE EQ NE
-%left '+''-'
-%left '*''/'
 
-%token	START END ECHO IF ELSE ELSEIF FOR WHILE DO SWITCH CASE DEFAULT CONTINUE BREAK RETURN FUNCTION FNAME CINT CFLOAT CSTRING CCHAR CBOOL EXPO LE GE EEQ NEQ IDENTIFIER ASSG COMMA SEMI COLON MUL DIV MOD ADD SUB DOT LT GT LPARENTHESIS RPARENTHESIS LCURLY RCURLY LSQUARE RSQUARE UINCR UDECR
+%union { 	struct var_name { 
+			char name[100]; 
+		} nd_obj;
+		
+		struct conditional { 
+			char name[100];
+			char ifPart[5];
+			char elsePart[5];
+		} conditional_obj;		
+	} 
 
+
+%token <nd_obj>	START END ECHO IF ELSE ELSEIF FOR WHILE DO SWITCH CASE DEFAULT CONTINUE BREAK RETURN FUNCTION FNAME CINT CFLOAT CSTRING CCHAR CBOOL EXPO LE GE EEQ NEQ IDENTIFIER ASSG COMMA SEMI COLON MUL DIV MOD ADD SUB DOT LT GT LPARENTHESIS RPARENTHESIS LCURLY RCURLY LSQUARE RSQUARE UINCR UDECR
+
+%left LT GT LE GE EEQ NEQ
+%left ADD SUB
+%left MUL DIV
+
+%type <nd_obj> s statement echostm declarestm value const loopstm loopcontibreak condistm switch funcstm funcdef funcinvoc relop
+
+%type <conditional_obj> ifstm op
 
 %%
 
  /* Start of the Parser */
 
-s: START statements END {printf("\n****** Valid Program *******\n"); return 0;}
+s: START statements END {printf("\n******************* Valid Program *******************\n"); return 0;}
  ;
 
 
@@ -25,16 +67,16 @@ statements: statement statements
 	  |
 	  ;
 
+
  /* Start of the Statement 
  	declarestm - Statement for the declaration of the variables
  	loopstm - statement of loops like while and for and do while
- 	boolexpr - boolean expression that results to a bool value
+ 	op - boolean expression that results to a bool value
  	condistm - statements for conditional expressions
  */
-statement: declarestm {printf("Reached at declaration statement\n");}
-	| loopstm {printf("Reached at loop statement\n");}
-	| boolexpr {printf("Reached at boolean statement\n");}
-	| condistm {printf("Reached at conditional statement\n");}
+statement: declarestm {strcpy($$.name,$1.name);}
+	| loopstm {}
+	| condistm {}
 	| funcstm {}
 	| echostm {}
 	;
@@ -44,34 +86,40 @@ echostm: ECHO value SEMI {};
 
 
  /* Start of the Declaration statement */
-declarestm: IDENTIFIER ASSG value SEMI {printf("Inside declare stmt\n\n");};
+declarestm: IDENTIFIER ASSG value SEMI {
+int res=searchSTable($1.name, $3.name);
+if (res==-1){
+	insertSTable($1.name, $3.name);
+}
+sprintf(intermediateCodes[icIndex++], "\t%s = %s\n", $1.name, $3.name);
+
+};
 
  /* Start of the Declaration value statement */
-value: const {printf("Reached const\n");}
-	| value op const {printf("Reached value op const\n");}
-	| LPARENTHESIS value RPARENTHESIS;
+value: op {strcpy($$.name,$1.name);}
+	;
 	
  /* Start of the const used in value */
-const: CINT {printf("Reached CINT\n");}
-	| CSTRING {printf("Reached CSTRING\n");}
-	| CBOOL {printf("Reached CBOOL\n");}
-	| CFLOAT {printf("Reached CFLOAT\n");}
-	| CCHAR {printf("Reached CCHAR\n");} 
-	| IDENTIFIER {printf("Reached in const Identifier\n");}
+const: CINT {strcpy($$.name,$1.name);}
+	| CSTRING {strcpy($$.name,$1.name);}
+	| CBOOL {strcpy($$.name,$1.name);}
+	| CFLOAT {strcpy($$.name,$1.name);}
+	| CCHAR {strcpy($$.name,$1.name);} 
+	| IDENTIFIER {}
 	| funcinvoc {};
 
 
 
  /* Start of the loop statements */
-loopstm: WHILE LPARENTHESIS boolexpr RPARENTHESIS LCURLY statements RCURLY {printf("yacc: While");}
-	| FOR LPARENTHESIS declarestm boolexpr SEMI incrdecrstm IDENTIFIER incrdecrstm RPARENTHESIS LCURLY statements RCURLY {printf("yacc: For");}
-	| DO LCURLY statements RCURLY WHILE LPARENTHESIS boolexpr RPARENTHESIS SEMI {printf("yacc: DO WHILE");}
+loopstm: WHILE LPARENTHESIS op RPARENTHESIS {currentScope++;} LCURLY statements RCURLY {currentScope--;}
+	| FOR LPARENTHESIS declarestm op SEMI incrdecrstm IDENTIFIER incrdecrstm RPARENTHESIS {currentScope++;}LCURLY statements RCURLY {currentScope--;}
+	| DO {currentScope++;} LCURLY statements RCURLY {currentScope--;} WHILE LPARENTHESIS op RPARENTHESIS SEMI {}
 	| loopcontibreak {}
 	;
 
  /* Start of the unary increment (++) and decrement (--) operators */
-incrdecrstm: UINCR {printf("incr\n");}
-	| UDECR {printf("decr\n");}
+incrdecrstm: UINCR {}
+	| UDECR {}
 	|
 	;
 	
@@ -80,21 +128,25 @@ loopcontibreak: BREAK SEMI {}
 	| CONTINUE SEMI {}
 	;
 	
+
  /* Start of the Conditional Statements */
 condistm: ifstm {}
 	| switch {};
 
 
  /* Start of the IF Statement */
-ifstm:IF LPARENTHESIS boolexpr RPARENTHESIS LCURLY statements RCURLY  elseifstm elsestm;
+ifstm: IF {isIf=1;} LPARENTHESIS op RPARENTHESIS {
+		sprintf(intermediateCodes[icIndex++], "\tif %s goto label%s\n\tgoto label%s\n", $4.name, $4.ifPart, $4.elsePart);
+		sprintf(intermediateCodes[icIndex++],"label%s:\n", $4.ifPart);
+	} {currentScope++;} LCURLY statements RCURLY {currentScope--; sprintf(intermediateCodes[icIndex++],"label%s:\n", $4.elsePart);} elseifstm elsestm {isIf=0;};
 
  /* Start of the elseif Statements */
-elseifstm: ELSEIF LPARENTHESIS boolexpr RPARENTHESIS LCURLY statements RCURLY elseifstm {}
+elseifstm: ELSEIF LPARENTHESIS op RPARENTHESIS {currentScope++;} LCURLY statements RCURLY {currentScope--;} elseifstm {}
 	|
 	;
 
  /* Start of the else Statement */
-elsestm: ELSE LCURLY statements RCURLY {}
+elsestm: ELSE {currentScope++;} LCURLY statements RCURLY {currentScope--;}
 	|
 	;
 
@@ -107,11 +159,10 @@ switchdefault: DEFAULT COLON statements {}
 	;
 
  /* Start of the cases in switch */
-switchcase: CASE const COLON statements switchcase {printf("Reached conti\n");}
+switchcase: CASE const COLON statements switchcase {}
 	|
 	;
  
-
  /* function statements */
 funcstm: funcdef {}
 	| funcinvoc SEMI {}
@@ -119,7 +170,7 @@ funcstm: funcdef {}
 
 
  /* Start: Defining grammar for function definition*/
-funcdef: FUNCTION FNAME LPARENTHESIS oneparam funcparams RPARENTHESIS LCURLY statements RCURLY {};
+funcdef: FUNCTION FNAME LPARENTHESIS oneparam funcparams RPARENTHESIS {currentScope++;} LCURLY statements RCURLY {currentScope--;};
 
 oneparam: IDENTIFIER {}
 	|
@@ -141,29 +192,160 @@ constfuncargu : COMMA const constfuncargu {}
 
 
  /* Start of the operations */
-op: ADD {printf("yacc: Addition\n");}
-	| SUB {printf("yacc: SUB\n");}
-	| DIV {printf("yacc: DIV\n");}
-	| MUL {printf("yacc: MUL\n");}
-	| MOD {printf("yacc: MOD\n");}
-	| DOT {printf("yacc: DOT\n");}
-	| EXPO {printf("yacc: EXPO\n");}
+ /* Generating intermediate code for Arithmetic and relational operations */
+op: const	{strcpy($$.name, $1.name);}
+	|op ADD op {
+	
+		sprintf($$.name, "t%d", tempVar); 
+		tempVar++;
+		sprintf(intermediateCodes[icIndex++],"\t%s = %s %s %s\n", $$.name, $1.name, $2.name, $3.name);
+	}
+	| op SUB op {
+		sprintf($$.name, "t%d", tempVar); 
+		tempVar++;
+		sprintf(intermediateCodes[icIndex++],"\t%s = %s %s %s\n", $$.name, $1.name, $2.name, $3.name);
+	}
+	| op DIV op {
+		if(strcmp($3.name, "0")==0){
+			printf("\n\nDivide by Zero Error. You cannot divide a value by 0!!!!\n");
+			exit(-1);
+		}
+		sprintf($$.name, "t%d", tempVar); 
+		tempVar++;
+		sprintf(intermediateCodes[icIndex++],"\t%s = %s %s %s\n", $$.name, $1.name, $2.name, $3.name);
+	}
+	| op MUL op {
+		sprintf($$.name, "t%d", tempVar); 
+		tempVar++;
+		sprintf(intermediateCodes[icIndex++],"\t%s = %s %s %s\n", $$.name, $1.name, $2.name, $3.name);
+	}
+	| op MOD op {
+		sprintf($$.name, "t%d", tempVar); 
+		tempVar++;
+		sprintf(intermediateCodes[icIndex++],"\t%s = %s %s %s\n", $$.name, $1.name, $2.name, $3.name);
+	}
+	| op DOT op {}
+	| op EXPO op {}
+	| op relop op {
+		
+		if(isIf==0){
+			/* if(strcmp($2.name, ">")==0){
+				if(atoi($1.name) > atoi($3.name)){
+					strcpy($$.name,"1");
+				}else{strcpy($$.name,"0");}
+			}else if(strcmp($2.name, "<")==0){
+				if(atoi($1.name) < atoi($3.name)){
+					strcpy($$.name,"1");
+				}else{strcpy($$.name,"0");}
+			}else if(strcmp($2.name, ">=")==0){
+				if(atoi($1.name) >= atoi($3.name)){
+					strcpy($$.name,"1");
+				}else{strcpy($$.name,"0");}
+			}else if(strcmp($2.name, "<=")==0){
+				if(atoi($1.name) <= atoi($3.name)){
+					strcpy($$.name,"1");
+				}else{strcpy($$.name,"0");}
+			}else if(strcmp($2.name, "==")==0){
+				if(atoi($1.name) == atoi($3.name)){
+					strcpy($$.name,"1");
+				}else{strcpy($$.name,"0");}
+			}else if(strcmp($2.name, "!=")==0){
+				if(atoi($1.name) != atoi($3.name)){
+					strcpy($$.name,"1");
+				}else{strcpy($$.name,"0");}
+			}*/
+			
+			
+			
+			sprintf(intermediateCodes[icIndex++], "\tif %s %s %s goto label%d\n", $1.name, $2.name, $3.name, label);
+			sprintf(intermediateCodes[icIndex++], "\tt%d = 0\n", tempVar);
+			
+			sprintf($$.name, "t%d", tempVar);
+			
+			sprintf(intermediateCodes[icIndex++], "\tgoto label%d\n", label+1);
+			
+			sprintf(intermediateCodes[icIndex++], "label%d:\n\tt%d = 1\n",label, tempVar++);
+			
+			sprintf(intermediateCodes[icIndex++], "label%d: \n", label+1);
+			label+=2;
+		}else{
+			sprintf($$.name, "%s %s %s", $1.name, $2.name, $3.name);
+			sprintf($$.ifPart, "%d", label++);
+			sprintf($$.elsePart, "%d", label++);
+		}
+		
+			
+		
+		
+	
+	}
+	| LPARENTHESIS op RPARENTHESIS	{strcpy($$.name,$2.name);}
 	;
 
- /* Start of the Boolean expression */
-boolexpr: const LT const {$$ = $1 < $3;}
-	| const GT const {$$ = $1 > $3;}
-	| const LE const {$$ = $1 <= $3;}
-	| const GE const {$$ = $1 >= $3;}
-	| const EEQ const {$$ = $1 == $3;}
-	| const NEQ const {$$ = $1 != $3;};
+ /* Start of the Boolean operators */
+relop: LT {strcpy($$.name, $1.name);}
+	| GT {strcpy($$.name, $1.name);}
+	| LE {strcpy($$.name, $1.name);}
+	| GE {strcpy($$.name, $1.name);}
+	| EEQ {strcpy($$.name, $1.name);}
+	| NEQ {strcpy($$.name, $1.name);}
 
 %%
 
+// This function searches the symbol table and if found updates it to the given value;
+int searchSTable(char* varName, char* val){
+
+	for(int i=0; i<varCount; i++){
+		if(strcmp(symbolTable[i].name, varName)==0){
+			strcpy(symbolTable[i].value, val);
+			return 1;
+		}
+	}
+	
+	return -1;
+}
+
+// This function inserts a variable data into the symbolTable
+void insertSTable(char* varName, char* val){
+
+	int index = varCount++;
+	strcpy(symbolTable[index].name, varName);
+	strcpy(symbolTable[index].value, val);
+	symbolTable[index].scope = currentScope;
+	
+}
+
+
+
+int main(){
+
+	yyparse();
+	if(flag!=1){
+		printf("\n\n");
+		printf("----------  INTERMEDIATE CODE GENERATED  -----------\n\n\n");
+		for(int i=0; i<icIndex; i++){
+			printf("%s", intermediateCodes[i]);
+		}
+		printf("\n\n");
+		printf("------------------------------------------------------\n\n");
+		
+		printf("\n\n");
+		printf("-------------------  Symbol Table  -------------------\n\n\n");
+		
+		printf("------------------------------------------------------\n");
+		printf("Name\t\tValue\t\tScope");
+		printf("\n------------------------------------------------------\n");
+		for(int i=0; i<varCount; i++){
+			printf("\n%s\t\t%s\t\t%d", symbolTable[i].name, symbolTable[i].value, symbolTable[i].scope);
+		}
+		printf("\n\n");
+		printf("------------------------------------------------------\n\n");
+	}
+}
 
 void yyerror(char *error){
 
-	fprintf(stderr, "!!!!!!!!!!!!! error: %s !!!!!!!!!!!!!\n", error);
+	fprintf(stderr, "\n\n!!!!!!!!!!!!! error: %s !!!!!!!!!!!!!\n", error);
 	flag=1;
 
 }
